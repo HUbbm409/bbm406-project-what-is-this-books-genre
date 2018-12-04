@@ -7,6 +7,11 @@ if pt.system() == "Linux":
 elif pt.system() == "Windows":
     DATASET = "..\\dataset\\booksummaries.txt"
 
+if pt.system() == "Linux":
+    CLEANDATASET = "../dataset/booksummaries_clean.csv"
+elif pt.system() == "Windows":
+    CLEANDATASET = "..\\dataset\\booksummaries_clean.csv"
+
 
 class DatasetManager:
 
@@ -28,6 +33,7 @@ class DatasetManager:
         return data
 
     def CleanData(self):
+
         temp_data = self.data
         # Lower case all summaries
         temp_data["Summary"] = temp_data["Summary"].map(lambda x: x.lower())
@@ -35,7 +41,12 @@ class DatasetManager:
         temp_data["Summary"] = temp_data["Summary"].str.replace('\d+', '')
         # Remove punctuations
         temp_data["Summary"] = temp_data["Summary"].str.replace('[^\w\s]', '')
-
+        # Save the cleaned data
         temp_data.to_csv(DATASET[0:-17] + "booksummaries_clean.csv", sep='\t')
 
         return temp_data
+
+    def ReadCleanedData(self):
+
+        data = pd.read_csv(CLEANDATASET, sep="\t")
+        self.data = data
