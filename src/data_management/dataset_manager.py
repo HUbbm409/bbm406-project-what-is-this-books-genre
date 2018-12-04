@@ -4,7 +4,7 @@ import pandas as pd
 if pt.system() == "Linux":
     DATASET = "../dataset/booksummaries.txt"
 elif pt.system() == "Windows":
-    DATASET = "..\dataset\booksummaries.txt"
+    DATASET = "..\\dataset\\booksummaries.txt"
 
 
 class DatasetManager:
@@ -12,7 +12,7 @@ class DatasetManager:
     def __init__(self):
         self.data = None
 
-    def read_data(self):
+    def ReadData(self):
 
         data = pd.read_csv(DATASET, sep="\t", header=None)
         data.columns = ["ID", "Code", "Title", "Author", "Release Date", "Genre", "Summary"]
