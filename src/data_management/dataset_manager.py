@@ -61,6 +61,8 @@ class DatasetManager:
         data = pd.read_csv(CLEANDATASET, sep="\t")
         self.data = data
 
+        return data
+
     def SelectGenre(self, genre_list):
         if genre_list is float and math.isnan(genre_list):
             return
