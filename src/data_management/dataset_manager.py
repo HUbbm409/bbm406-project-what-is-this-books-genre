@@ -1,6 +1,10 @@
 import platform as pt
 import pandas as pd
 import math
+import nltk
+from nltk.stem import WordNetLemmatizer
+from nltk.stem.snowball import SnowballStemmer
+
 
 if pt.system() == "Linux":
     DATASET = "../dataset/booksummaries.txt"
@@ -63,6 +67,16 @@ class DatasetManager:
 
         return data
 
+    def ReadCleanedDataSimplified(self):
+
+        data = pd.read_csv(CLEANDATASET, sep="\t")
+        self.data = data
+
+        data_summaries = list(data["Summary"])
+        data_genres = list(data["Genre"])
+
+        return data_summaries, data_genres
+
     def SelectGenre(self, genre_list):
         if genre_list is float and math.isnan(genre_list):
             return
@@ -99,3 +113,25 @@ class DatasetManager:
             return
         # Update book's genre in dataset
         return true_genre
+
+    def Lemmatize(self, data=None):
+        if data is not None:
+            data = self.data["Summary"]
+
+        # Initialize lemmatizer
+        nltk.download("wordnet")
+        lemmer = WordNetLemmatizer()
+        # Lemmatize summaries
+        data = [' '.join([lemmer.lemmatize(word) for word in summary.split(' ')]) for summary in data]
+
+        return data
+
+    def Stemmize(self, data=None):
+        if data is not None:
+            data = self.data["Summary"]
+        # Initialize stemmer
+        stemmer = SnowballStemmer('english')
+        # Stem the data
+        data = [' '.join([stemmer.stem(word) for word in summary.split(' ')]) for summary in data]
+
+        return data
