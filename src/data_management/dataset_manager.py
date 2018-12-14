@@ -56,7 +56,7 @@ class DatasetManager:
         # reset indices of rows
         temp_data = temp_data.reset_index(drop=True)
         # Save the cleaned data
-        temp_data.to_csv(DATASET[0:-17] + "booksummaries_clean.csv", sep='\t')
+        temp_data.to_csv(DATASET[0:-17] + "booksummaries_clean.csv", sep='\t', index_label=False)
 
         return temp_data
 
