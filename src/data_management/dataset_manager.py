@@ -115,7 +115,7 @@ class DatasetManager:
         return true_genre
 
     def Lemmatize(self, data=None):
-        if data is not None:
+        if data is None:
             data = self.data["Summary"]
 
         # Initialize lemmatizer
@@ -127,7 +127,7 @@ class DatasetManager:
         return data
 
     def Stemmize(self, data=None):
-        if data is not None:
+        if data is None:
             data = self.data["Summary"]
         # Initialize stemmer
         stemmer = SnowballStemmer('english')
@@ -135,3 +135,31 @@ class DatasetManager:
         data = [' '.join([stemmer.stem(word) for word in summary.split(' ')]) for summary in data]
 
         return data
+
+    def SplitData(self, data=None, val_per=20, test_per=20):
+        if data is None:
+            data = self.data
+        # Create empty dataframes
+        train_data = pd.DataFrame()
+        validation_data = pd.DataFrame()
+        test_data = pd.DataFrame()
+
+        data_by_genres = []
+        for genre, df_genre in data.groupby('Genre'):
+            # Split data by genre
+            data_by_genres.append(df_genre.reset_index(drop=True))
+
+        for df in data_by_genres:
+            # Row number to be split
+            val_num = int((val_per / 100) * len(df))
+            test_num = int((test_per / 100) * len(df))
+            # Append split data to empty dataframes
+            validation_data = validation_data.append(df[0:val_num], ignore_index=True)
+            test_data = test_data.append(df[val_num:val_num + test_num], ignore_index=True)
+            train_data = train_data.append(df[val_num + test_num:], ignore_index=True)
+
+        # print(len(validation_data), len(test_data), len(train_data))
+        # Shuffle all data and return
+        return train_data.sample(frac=1).reset_index(drop=True), \
+               validation_data.sample(frac=1).reset_index(drop=True),\
+               test_data.sample(frac=1).reset_index(drop=True)
