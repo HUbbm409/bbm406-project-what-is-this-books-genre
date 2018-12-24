@@ -1,36 +1,33 @@
 # Importing Required Packages
 # ---------------------------
 
-import pandas as pd
-import numpy as np
-import pickle
-import keras
 from keras.preprocessing.text import Tokenizer
 from keras.models import Sequential
 from keras.layers import Activation, Dense, Dropout
 from sklearn.preprocessing import LabelBinarizer
-import sklearn.datasets as skds
-from pathlib import Path
 from data_management.dataset_manager import DatasetManager
 
 # -- Get data --
 manager = DatasetManager()
 data = manager.ReadCleanedData()  # read data
 
+trainData, testData, uniqueGenreList = manager.SplitDataMultipleGenre(data, 20)
+# print(len(data))
 #  -- Train data --
-trainSize = int(len(data) * 0.8)  # train data size %80, validation data size %20
-trainSummary = data["Summary"][:trainSize]  # novel's summaries for train
-trainGenre = data["Genre"][:trainSize]  # novel's genres for train
+# trainSize = int(len(data) * 0.8)  # train data size %80, validation data size %20
+trainSummary = trainData["Summary"]  # novel's summaries for train
+trainGenre = trainData["Genre"]  # novel's genres for train
 
 #  -- Test Data --
-testSummary = data["Summary"][trainSize:]  # novel's summaries for test
-testGenre = data["Genre"][trainSize:]  # novel's genres for test
+testSummary = testData["Summary"]  # novel's summaries for test
+testGenre = testData["Genre"]  # novel's genres for test
 
 # -- Tokenize and Prepare Vocabulary --
-# 20 news groups
-num_labels = 15  # class number. We have 22 layer for classification
-vocab_size = 15000  # inputs number for neural network, It must be examine in feature for our data set
-batch_size = 250
+# 15 book's groups
+num_labels = 27  # class number. We have 22 layer for classification
+vocab_size = 20000  # inputs number for neural network, It must be examine in feature for our data set
+batch_size = 1
+epoch_size = 4
 
 # define Tokenizer with Vocab Size
 tokenizer = Tokenizer(num_words=vocab_size)  # tokenizer object, number of words ???
@@ -53,31 +50,57 @@ y_test = encoder.transform(testGenre)  # convert to  test output data to binary
 # -- Build Keras Model and Fit --
 # Now neural network model like that: [15000-256-256-15]
 model = Sequential()
-model.add(Dense(256, input_shape=(vocab_size,)))
-model.add(Activation('relu'))
-model.add(Dropout(0.2))
-model.add(Dense(256))
-model.add(Activation('relu'))
-model.add(Dropout(0.2))
+model.add(Dense(128, input_shape=(vocab_size,)))
+model.add(Activation('sigmoid'))
+model.add(Dropout(0.3))
+model.add(Dense(128, input_shape=(vocab_size,)))
+model.add(Activation('sigmoid'))
 model.add(Dense(num_labels))
-model.add(Activation('softmax'))
+
+model.add(Activation('softmax'))  # original: softmax, multi label: sigmoid
 model.summary()
 
 # this parameters haven't know what are they used for yet
 # it must be examine and would be found appropriates
-model.compile(loss='categorical_crossentropy',
+# optimizer  = "sgd" = 0,41
+model.compile(loss='categorical_crossentropy',  # loss = categorical_crossentropy multi label: binary_crossentropy
               optimizer='adam',
               metrics=['accuracy'])
 
 history = model.fit(x_train, y_train,
                     batch_size=batch_size,
-                    epochs=5,
+                    epochs=epoch_size,
                     verbose=1,
                     validation_split=0.1)
 
 # -- Evaluate model --
 score = model.evaluate(x_test, y_test,
                        batch_size=batch_size, verbose=1)
+print('Test accuracy:', score[1])
+x = model.predict(x_test, batch_size)
+# x[x >= 0.1] = 1
+# x[x < 0.1] = 0
+mostFrequentGenres = {1: ' Alternate history', 2: ' Autobiography', 3: ' Biography', 4: " Children's literature", 5: ' Comedy',
+                      6: ' Comic novel', 7: ' Crime Fiction', 8: ' Detective fiction', 9: ' Dystopia', 10: ' Fantasy',
+                      11: ' Fiction', 12: ' Gothic fiction', 13: ' Historical fiction', 14: ' Historical novel', 15: ' Horror',
+                      16: ' Mystery', 17: ' Non-fiction', 18: ' Novel', 19: ' Romance novel', 20: ' Satire', 21: ' Science Fiction',
+                      22: ' Speculative fiction', 23: ' Spy fiction', 24: ' Suspense', 25: ' Thriller', 26: ' Young adult literature',
+                      0: ' Adventure novel' }
 
-print('Test accuracy:', score[1])  # I reached %40 accuracy for now
-print("DONE")
+
+# -My Prediction-
+predict = model.predict(x_test, batch_size)
+predictionHit = 0
+for i in range(predict.shape[0]):
+    predictionLabel = predict[i].argmax()
+    label = mostFrequentGenres.get(predictionLabel)
+    genreList = testData.iloc[i]["GenreList"]
+    if genreList.__contains__(label):
+        predictionHit += 1
+
+print('Test accuracy:', (predictionHit/predict.shape[0]))
+
+# -- Hyperparameters--
+# 1 hidden layer, drop-out = 0.3 neuron number 512, batch 32,
+
+print("Done")

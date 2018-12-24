@@ -196,7 +196,7 @@ class DatasetManager:
             data = self.data
 
         test_num = test_per/100
-        train_data, test_data = train_test_split(data, test_size=test_num)
+        train_data, test_data = train_test_split(data, test_size=test_num,shuffle=True)
         genre_set = set()
 
         for genres in data["GenreList"]:

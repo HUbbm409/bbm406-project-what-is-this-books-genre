@@ -11,6 +11,7 @@ from nltk.stem import WordNetLemmatizer
 import seaborn as sn
 import pandas as pd
 import matplotlib.pyplot as plt
+import imblearn
 # nltk.download("wordnet")
 # Model as pipeline
 model = Pipeline([
