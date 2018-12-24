@@ -22,10 +22,12 @@ class DatasetManager:
 
     def __init__(self):
         self.data = None
-        self.most_frequent_genres = {" Fiction": 0, " Novel": 0, " Fantasy": 0, " Children's literature": 0, " Mystery": 0,
-                                     " Young adult literature": 0, " Suspense": 0, " Historical novel": 0, " Thriller": 0,
-                                     " Horror": 0, " Romance novel": 0, " Adventure novel": 0, " Non-fiction": 0,
-                                     " Alternate history": 0, " Comedy": 0}
+        self.most_frequent_genres = {' Fiction': 0, ' Speculative fiction': 0, ' Science Fiction': 0, ' Novel': 0, ' Fantasy': 0,
+                                     " Children's literature": 0, ' Mystery': 0, ' Young adult literature': 0, ' Suspense': 0,
+                                     ' Crime Fiction': 0, ' Historical novel': 0, ' Thriller': 0, ' Horror': 0, ' Romance novel': 0,
+                                     ' Historical fiction': 0, ' Detective fiction': 0, ' Adventure novel': 0, ' Non-fiction': 0,
+                                     ' Alternate history': 0, ' Spy fiction': 0, ' Comedy': 0, ' Dystopia': 0, ' Autobiography': 0,
+                                     ' Satire': 0, ' Gothic fiction': 0, ' Comic novel': 0, ' Biography': 0}
 
     def ReadData(self):
 
@@ -41,7 +43,7 @@ class DatasetManager:
         self.data = data
         return data
 
-    def CleanData(self):
+    def CleanData(self, multi_genre=False):
 
         temp_data = self.data
         # Lower case all summaries
@@ -51,7 +53,11 @@ class DatasetManager:
         # Remove punctuations
         temp_data["Summary"] = temp_data["Summary"].str.replace('[^\w\s]', '')
         # Filter genres
-        temp_data["Genre"] = temp_data["Genre"].map(lambda x: self.SelectGenre(x))
+        if not multi_genre:
+            temp_data["Genre"] = temp_data["Genre"].map(lambda x: self.SelectGenre(x))
+        else:
+            temp_data["GenreList"] = temp_data["Genre"].map(lambda x: self.SelectGenreMultipleGenre(x))
+            temp_data["Genre"] = temp_data["Genre"].map(lambda x: self.SelectGenre(x, multi_genre=True))
         # Filter nan genres
         temp_data = temp_data.dropna(subset=["Genre"])
         # reset indices of rows
@@ -78,7 +84,7 @@ class DatasetManager:
 
         return data_summaries, data_genres
 
-    def SelectGenre(self, genre_list):
+    def SelectGenre(self, genre_list, multi_genre=False):
         if genre_list is float and math.isnan(genre_list):
             return
         # remove parenthesis
@@ -92,7 +98,7 @@ class DatasetManager:
             genre = genre.split(":")[1].replace("\"", "")
             # Change all types of fictions to " Fiction" genre
             temp_genre = genre.split(" ")
-            if len(temp_genre) > 2:
+            if len(temp_genre) > 2 and not multi_genre:
                 if temp_genre[2] == "fiction" or temp_genre[2] == "Fiction":
                     genre = " Fiction"
 
@@ -114,6 +120,28 @@ class DatasetManager:
             return
         # Update book's genre in dataset
         return true_genre
+
+    def SelectGenreMultipleGenre(self, genre_list):
+        if genre_list is float and math.isnan(genre_list):
+            return
+        # remove parenthesis
+        genre_list = genre_list.strip("{}")
+        # split according to comma
+        genre_list = genre_list.split(",")
+        true_genre = []
+
+        for genre in genre_list:
+            # remove genre code
+            genre = genre.split(":")[1].replace("\"", "")
+            # Append genres to list
+            if genre in self.most_frequent_genres:
+                true_genre.append(genre)
+
+        if true_genre is []:
+            return
+        else:
+            return true_genre
+
 
     def Lemmatize(self, data=None):
         if data is None:
