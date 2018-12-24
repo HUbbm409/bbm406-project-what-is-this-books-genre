@@ -10,7 +10,6 @@ import seaborn as sn
 import pandas as pd
 import matplotlib.pyplot as plt
 import ast
-
 # Model as pipeline
 
 model = Pipeline([
