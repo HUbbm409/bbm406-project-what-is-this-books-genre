@@ -4,6 +4,5 @@ import matplotlib
 
 manager = DatasetManager()
 manager.ReadData()
-manager.CleanData()
+manager.CleanData(multi_genre=True)
 manager.ReadCleanedData()
-manager.SplitData(val_per=20, test_per=10)
