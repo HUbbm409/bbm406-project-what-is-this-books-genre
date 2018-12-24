@@ -1,0 +1,57 @@
+\begin{thebibliography}{0}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Imbalanced dataset with NB(2003)]{ImbalancedNB}
+Jason D. M. Rennie, Lawrence Shih, Jaime Teevan, David R. Karger
+\newblock Tackling the Poor Assumptions of Naive Bayes Text Classifiers, 2003
+\newblock \url{http://people.csail.mit.edu/jrennie/papers/icml03-nb.pdf}
+
+\bibitem[ANN for text classification(2003)]{ANN1}
+Rodrigo Fernandes de Mello, Luciano Jose Senger, Laurence Tianruo Yang
+\newblock AUTOMATIC TEXT CLASSIFICATION USING AN ARTIFICIAL NEURAL  NETWORK, 2003
+\newblock \url{https://link.springer.com/content/pdf/10.1007%2F0-387-24049-7_12.pdf}
+
+\bibitem[MNB for text classification(2004)]{MNB}
+Ashraf M. Kibriya, Eibe Frank, Bernhard Pfahringer, and Geoffrey Holmes
+\newblock Multinomial Naive Bayes for Text Categorization Revisited, 2004
+\newblock \url{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.473.5982&rep=rep1&type=pdf}
+
+\bibitem[Resampling()]{resample}
+\newblock Oversampling and undersampling in data analysis
+\newblock \url{https://en.wikipedia.org/wiki/Oversampling_and_undersampling_in_data_analysis}
+
+\bibitem[Resampling to improve performance(2016)]{resamplep}
+Ajinkya More 
+\newblock Survey of resampling techniques for improving classification performance in unbalanced dataset, 2016
+\newblock \url{https://arxiv.org/pdf/1608.06048.pdf}
+
+\bibitem[Oversampling Comparison(2017)]{over}
+Samrat Jayanta Dattagupta
+\newblock A PERFORMANCE COMPARISON OF OVERSAMPLING METHODS FOR DATA GENERATION IN IMBALANCED LEARNING TASKS, 2017
+\newblock \url{https://run.unl.pt/bitstream/10362/31307/1/TEGI0396.pdf}
+
+\bibitem[Dataset(2013)]{ds}
+ David Bamman
+\newblock Book dataset, 2013
+\newblock \url{http://www.cs.cmu.edu/~dbamman/booksummaries.html}
+
+\bibitem[Predicting Movie Genres(2018)]{movie}
+Quan Hoang
+\newblock Predicting Movie Genres Based on Plot Summaries, 2018
+\newblock \url{https://www.researchgate.net/publication/322517980_Predicting_Movie_Genres_Based_on_Plot_Summaries}
+
+\bibitem[Multi-label imbalance(2015)]{mli}
+Francisco Charte, Antonio J. Rivera, María J. del Jesus, Francisco Herrera
+\newblock Addressing imbalance in multilabel classification: Measures and random resampling algorithms, 2015
+\newblock \url{https://sci2s.ugr.es/sites/default/files/ficherosPublicaciones/1790_2015-Neuro-Charte-MultiLabel_Imbalanced.pdf}
+
+\bibitem[ANN for text classification(2015)]{ANN2}
+Fraser Murray
+\newblock Text Classification using Artificial Neural Networks, 2015
+\newblock \url{https://minerva.leeds.ac.uk/bbcswebdav/orgs/SCH_Computing/FYProj/reports/1415/MURRAY.pdf}
+
+\end{thebibliography}
