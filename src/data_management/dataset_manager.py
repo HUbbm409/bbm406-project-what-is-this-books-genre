@@ -6,6 +6,9 @@ from nltk.stem import WordNetLemmatizer
 from nltk.stem.snowball import SnowballStemmer
 import ast
 from sklearn.model_selection import train_test_split
+import numpy as np
+from scipy import sparse
+
 
 if pt.system() == "Linux":
     DATASET = "../dataset/booksummaries.txt"
@@ -68,14 +71,14 @@ class DatasetManager:
         return temp_data
 
     def ReadCleanedData(self):
-
+        # Read whole dataset and return it
         data = pd.read_csv(CLEANDATASET, sep="\t")
         self.data = data
 
         return data
 
     def ReadCleanedDataSimplified(self):
-
+        # Read whole dataset, but return only summary and genre columns
         data = pd.read_csv(CLEANDATASET, sep="\t")
         self.data = data
 
@@ -87,14 +90,14 @@ class DatasetManager:
     def SelectGenre(self, genre_list, multi_genre=False):
         if genre_list is float and math.isnan(genre_list):
             return
-        # remove parenthesis
+        # Remove parenthesis
         genre_list = genre_list.strip("{}")
-        # split according to comma
+        # Split according to comma
         genre_list = genre_list.split(",")
         true_genre = ""
         first_one_flag = 0
         for genre in genre_list:
-            # remove genre code
+            # Remove genre code
             genre = genre.split(":")[1].replace("\"", "")
             # Change all types of fictions to " Fiction" genre
             temp_genre = genre.split(" ")
@@ -124,14 +127,14 @@ class DatasetManager:
     def SelectGenreMultipleGenre(self, genre_list):
         if genre_list is float and math.isnan(genre_list):
             return
-        # remove parenthesis
+        # Remove parenthesis
         genre_list = genre_list.strip("{}")
-        # split according to comma
+        # Split according to comma
         genre_list = genre_list.split(",")
         true_genre = []
 
         for genre in genre_list:
-            # remove genre code
+            # Remove genre code
             genre = genre.split(":")[1].replace("\"", "")
             # Append genres to list
             if genre in self.most_frequent_genres:
@@ -190,11 +193,14 @@ class DatasetManager:
                test_data.sample(frac=1).reset_index(drop=True)
 
     def SplitDataMultipleGenre(self, data=None, test_per=20):
+        # Check if data is given
         if data is None:
             data = self.data
-
+        # Test data percentage
         test_num = test_per/100
+        # Split dataset
         train_data, test_data = train_test_split(data, test_size=test_num, shuffle=True)
+        # Create GenreList for each book
         genre_set = set()
 
         for genres in data["GenreList"]:
@@ -204,3 +210,22 @@ class DatasetManager:
 
         return train_data, test_data, genre_set
 
+    def MultiLabel2Matrix(self, data, genre_types):
+        # Check if whole dataset or not
+        if isinstance(data, pd.DataFrame):
+            data = data["GenreList"]
+        y = []
+        for genres in data:
+            genres = ast.literal_eval(genres)
+            # Create a vector with length of genre type count
+            temp = [0] * len(genre_types)
+            for genre in genres:
+                # Fill the vector
+                temp[genre_types[genre]] = 1
+            # Add to y
+            y.append(temp)
+        # Change type to csr_matrix
+        outputs = np.array(y)
+        y = sparse.csr_matrix(outputs)
+
+        return y
