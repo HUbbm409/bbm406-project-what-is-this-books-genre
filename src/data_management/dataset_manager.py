@@ -226,6 +226,6 @@ class DatasetManager:
             y.append(temp)
         # Change type to csr_matrix
         outputs = np.array(y)
-        y = sparse.csr_matrix(outputs)
+        y = sparse.lil_matrix(outputs)
 
         return y
