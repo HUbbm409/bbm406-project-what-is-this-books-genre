@@ -1,5 +1,6 @@
 import pickle
 
+
 class ObjectManager:
     def __init__(self):
         pass
