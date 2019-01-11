@@ -6,8 +6,37 @@ from keras.models import Sequential
 from keras.layers import Activation, Dense, Dropout
 from sklearn.preprocessing import LabelBinarizer
 from data_management.dataset_manager import DatasetManager
+import ast
+import gensim
+import numpy as np
+from sklearn.metrics import confusion_matrix
+import seaborn as sn
+import pandas as pd
+import matplotlib.pyplot as plt
 
+def Word2Vec(model, data):
+    temp = []
+    for x in data:
+        count = 0
+        vector = np.zeros((300,))
+        for word in x.split(' '):
+            try:
+                vector += model.get_vector(word)
+                count += 1
+            except KeyError:
+                continue
+
+        if count == 0:
+            vector = np.zeros((300,))
+            count = 1
+            print(x)
+        temp.append(vector / count)
+    return temp
 # -- Get data --
+
+
+word2vecModel = gensim.models.KeyedVectors.load_word2vec_format('./2vecmodels/GoogleNews-vectors-negative300.bin', binary=True)
+
 manager = DatasetManager()
 data = manager.ReadCleanedData()  # read data
 
@@ -26,16 +55,14 @@ testGenre = testData["Genre"]  # novel's genres for test
 # 15 book's groups
 num_labels = 27  # class number. We have 22 layer for classification
 vocab_size = 20000  # inputs number for neural network, It must be examine in feature for our data set
-batch_size = 1
-epoch_size = 4
+batch_size = 20
+epoch_size = 500
 
-# define Tokenizer with Vocab Size
-tokenizer = Tokenizer(num_words=vocab_size)  # tokenizer object, number of words ???
-tokenizer.fit_on_texts(trainSummary)    # bag of words
+tempTrain = Word2Vec(word2vecModel, trainSummary)
+x_train = np.array(tempTrain)
 
-x_train = tokenizer.texts_to_matrix(trainSummary, mode='tfidf')  # apply tfidf to train
-x_test = tokenizer.texts_to_matrix(testSummary, mode='tfidf')   # apply tfidf to test
-
+tempTest = Word2Vec(word2vecModel, testSummary)
+x_test = np.array(tempTest)
 
 """
 At learning time, this simply consists in learning one regressor or binary classifier per class. In doing so, one needs 
@@ -50,10 +77,11 @@ y_test = encoder.transform(testGenre)  # convert to  test output data to binary
 # -- Build Keras Model and Fit --
 # Now neural network model like that: [15000-256-256-15]
 model = Sequential()
-model.add(Dense(128, input_shape=(vocab_size,)))
+model.add(Dense(128, input_shape=(300,)))
 model.add(Activation('sigmoid'))
 model.add(Dropout(0.3))
-model.add(Dense(128, input_shape=(vocab_size,)))
+model.add(Dense(128))
+model.add(Dropout(0.3))
 model.add(Activation('sigmoid'))
 model.add(Dense(num_labels))
 
@@ -88,19 +116,30 @@ mostFrequentGenres = {1: ' Alternate history', 2: ' Autobiography', 3: ' Biograp
                       0: ' Adventure novel' }
 
 
+
 # -My Prediction-
 predict = model.predict(x_test, batch_size)
 predictionHit = 0
+s_pred = []
 for i in range(predict.shape[0]):
     predictionLabel = predict[i].argmax()
+    s_pred.append(predictionLabel)
     label = mostFrequentGenres.get(predictionLabel)
     genreList = testData.iloc[i]["GenreList"]
-    if genreList.__contains__(label):
+    genreList = ast.literal_eval(genreList)
+    if label in genreList:
         predictionHit += 1
+
 
 print('Test accuracy:', (predictionHit/predict.shape[0]))
 
-# -- Hyperparameters--
-# 1 hidden layer, drop-out = 0.3 neuron number 512, batch 32,
-
 print("Done")
+reverse_genre_types = {v: k for k, v in mostFrequentGenres.items()}
+test_genres = [reverse_genre_types[genre] for genre in testData["Genre"]]
+
+df_matrix = pd.DataFrame(confusion_matrix(test_genres, s_pred), index=[key for key in reverse_genre_types.keys()],
+                         columns=[key for key in reverse_genre_types.keys()])
+plt.figure(figsize = (10,10))
+sn.heatmap(df_matrix, annot=True, fmt='g')
+plt.show()
+plt.savefig("naive_bayes.png")

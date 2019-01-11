@@ -9,16 +9,15 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 from scipy import sparse
 
+if pt.system() == "Linux":
+    DATASET = "../../dataset/booksummaries.txt"
+elif pt.system() == "Windows":
+    DATASET = "..\\..\\dataset\\booksummaries.txt"
 
 if pt.system() == "Linux":
-    DATASET = "../dataset/booksummaries.txt"
+    CLEANDATASET = "../../dataset/booksummaries_clean.csv"
 elif pt.system() == "Windows":
-    DATASET = "..\\dataset\\booksummaries.txt"
-
-if pt.system() == "Linux":
-    CLEANDATASET = "../dataset/booksummaries_clean.csv"
-elif pt.system() == "Windows":
-    CLEANDATASET = "..\\dataset\\booksummaries_clean.csv"
+    CLEANDATASET = "..\\..\\dataset\\booksummaries_clean.csv"
 
 
 class DatasetManager:
