@@ -3,9 +3,10 @@ import keras
 import gensim
 import numpy as np
 from sklearn.metrics import hamming_loss
+from sklearn.metrics import zero_one_loss
 import ast
 import os
-
+from pathlib import Path
 def ConvertGenreListToVector(data):
     genreTypes = {' Fiction': 0, ' Speculative fiction': 1, ' Science Fiction': 2, ' Novel': 3, ' Fantasy': 4,
                   " Children's literature": 5, ' Mystery': 6, ' Young adult literature': 7, ' Suspense': 8,
@@ -42,17 +43,16 @@ def Word2Vec(model, data):
     return temp
 
 # -- Get data --
-
-modelFiles = os.listdir("D:\\Okul Dosyalar\\Ders\\BBM 406\\ProjeAykutGit\\bbm406-project-what-is-this-books-genre\\src\\ANN\\Model")
+directory = Path().absolute()
+modelFiles = os.listdir(str(directory) + "\\Model")
 
 word2vecModel = gensim.models.KeyedVectors.load_word2vec_format('../2vecmodels/GoogleNews-vectors-negative300.bin', binary=True)
 objManager = ObjectManager()
-testData = objManager.ReadObject("D:\\Okul Dosyalar\\Ders\\BBM 406\\Project\\What-is-this-book-s-genre-\\RecordedObject\\TestData")
+testData = objManager.ReadObject(str(directory)+"\\RecordedObject\\TestData")
 file = open("log.txt","w")
 for modelName in modelFiles:
     file.write(str(modelName) + "\n")
-    model = keras.models.load_model(
-'D:\\Okul Dosyalar\\Ders\\BBM 406\\ProjeAykutGit\\bbm406-project-what-is-this-books-genre\\src\\ANN\\Model\\' + str(modelName) )
+    model = keras.models.load_model(str(directory) + '\\Model\\' + str(modelName) )
 
     #  -- Test Data --
     testSummary = testData["Summary"]  # novel's summaries for test
@@ -63,11 +63,12 @@ for modelName in modelFiles:
 
     y_test = ConvertGenreListToVector(testData)
     # Multilabel classifier
+
     trasholdList = [0.1, 0.15, 0.175, 0.2, 0.225, 0.25, 0.275, 0.30, 0.35, 0.40, 0.45, 0.50]
     # -My Prediction-
     for th in trasholdList:
         print("-- Trashold Value: ", th, " --")
-        file.write(str(modelName) + "\n")
+        file.write("-- Trashold Value: "+ str(th) + " --"+ "\n")
 
         predict = model.predict(x_test, 32)
         predict[predict >= th] = 1
@@ -76,19 +77,20 @@ for modelName in modelFiles:
         for i in range(predict.shape[0]):
             pre = [i for i, e in enumerate(predict[i]) if e == 1]
             acc = [i for i, e in enumerate(y_test[i]) if e == 1]
-            # if len(pre) == 0:
-            #     break
+
             hitNum = 0
             for j in pre:
                 if acc.__contains__(j):
                     hitNum += 1
             hitRate = hitNum / len(acc)
-            if hitRate > 0.7:
+            if hitRate > 0.65:
                 predictionHit += 1
         print('Test accuracy:', (predictionHit / predict.shape[0]))
         file.write('Test accuracy:'+ str(predictionHit / predict.shape[0]) + "\n")
-    print("Hamming Loss:", hamming_loss(predict, np.array(y_test)))
-    file.write("Hamming Loss:" + str(hamming_loss(predict, np.array(y_test))) + "\n")
+        print("Hamming Loss:", hamming_loss(np.array(y_test),predict ))
+        print("Zero One Loss:", zero_one_loss(np.array(y_test),predict ))
+        file.write("Hamming Loss:" + str(hamming_loss(np.array(y_test),predict)) + "\n")
+        file.write("Zero One Loss:" + str(zero_one_loss(np.array(y_test),predict)) + "\n")
 file.close()
 print("Done")
 
