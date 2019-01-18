@@ -1,0 +1,95 @@
+\begin{thebibliography}{10}\itemsep=-1pt
+
+\bibitem{hammingdistance}
+Anonymous.
+\newblock Hamming distance-wikipedia entry, - -.
+
+\bibitem{annml3}
+J.~Brownlee.
+\newblock Develop your first neural network in python with keras step, May
+  2016.
+
+\bibitem{sklearn_api}
+L.~Buitinck, G.~Louppe, M.~Blondel, F.~Pedregosa, A.~Mueller, O.~Grisel,
+  V.~Niculae, P.~Prettenhofer, A.~Gramfort, J.~Grobler, R.~Layton,
+  J.~VanderPlas, A.~Joly, B.~Holt, and G.~Varoquaux.
+\newblock {API} design for machine learning software: experiences from the
+  scikit-learn project.
+\newblock In {\em ECML PKDD Workshop: Languages for Data Mining and Machine
+  Learning}, pages 108--122, 2013.
+
+\bibitem{comp1}
+M.~H.-F. K.-S. J.-P. Cimiano.
+\newblock Learning compositionality functions on word embeddings for modelling
+  attribute meaning in adjective-noun phrases.
+\newblock April 2017.
+
+\bibitem{annml2}
+M.~Elantkowski.
+\newblock How to train a multi-label classifier, September 2015.
+
+\bibitem{hammingloss}
+I.~K. Grigorios~Tsoumakas.
+\newblock Multi-label classification: An overview. international journal of
+  data.
+\newblock {\em Warehousing \& Mining}, July 2007.
+
+\bibitem{oldpaper}
+S.~Y. Hakan~AKYUREK.
+\newblock What's this books genre?
+\newblock 2018.
+
+\bibitem{movie}
+Q.~Hoang.
+\newblock Predicting movie genres based on plot summaries.
+\newblock 01 2018.
+
+\bibitem{Imb2}
+J.~T.~K. Ken~Chen, Bao-Liang~Lu.
+\newblock Efficient classification of multi-label and imbalanced data using
+  min-max modular classifiers.
+\newblock {\em •}, 2006.
+
+\bibitem{word2vecmodel}
+C.~McCormick.
+\newblock Google's trained word2vec model in python, April 2016.
+
+\bibitem{DBLP:journals/corr/abs-1301-3781}
+T.~Mikolov, K.~Chen, G.~Corrado, and J.~Dean.
+\newblock Efficient estimation of word representations in vector space.
+\newblock {\em CoRR}, abs/1301.3781, 2013.
+
+\bibitem{Imb}
+X.-Y.~L. Min-Ling~Zhang, Yu-Kun~Li.
+\newblock Towards class-imbalance aware multi-label learning.
+\newblock {\em adsf}, 2015.
+
+\bibitem{scikit-learn}
+F.~Pedregosa, G.~Varoquaux, A.~Gramfort, V.~Michel, B.~Thirion, O.~Grisel,
+  M.~Blondel, P.~Prettenhofer, R.~Weiss, V.~Dubourg, J.~Vanderplas, A.~Passos,
+  D.~Cournapeau, M.~Brucher, M.~Perrot, and E.~Duchesnay.
+\newblock Scikit-learn: Machine learning in {P}ython.
+\newblock {\em Journal of Machine Learning Research}, 12:2825--2830, 2011.
+
+\bibitem{doc2vec}
+T.~M. Quoc~Le.
+\newblock Distributed representations of sentences and documents.
+\newblock {\em •}, 2014.
+
+\bibitem{annml1}
+T.~Sterbak.
+\newblock Guide to multi-class multi-label classification with neural networks
+  in python, November 2017.
+
+\bibitem{2017arXiv170201460S}
+P.~{Szyma{\'n}ski} and T.~{Kajdanowicz}.
+\newblock {A scikit-based Python environment for performing multi-label
+  classification}.
+\newblock {\em ArXiv e-prints}, Feb. 2017.
+
+\bibitem{comp2}
+Y.~Xiang.
+\newblock Compositional semantic.
+\newblock March 2017.
+
+\end{thebibliography}
