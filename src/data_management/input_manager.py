@@ -13,7 +13,7 @@ class InputEnvoy:
     def X_word2vec(self, x_data):
         if self.word2vec_model is None:
             self.word2vec_model = gensim.models.KeyedVectors.load_word2vec_format(
-                 './2vecmodels/GoogleNews-vectors-negative300.bin',
+                 '../2vecmodels/GoogleNews-vectors-negative300.bin',
                  binary=True)
 
         temp = []

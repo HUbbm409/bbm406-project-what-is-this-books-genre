@@ -23,7 +23,7 @@ data = dataset_manager.ReadCleanedData()
 train, test, genre_set = dataset_manager.SplitDataMultipleGenre()
 
 # Prepare train data
-x_train = input_envoy.Bow(train["Summary"], stop_words=None)
+x_train = input_envoy.X_word2vec(train["Summary"])
 
 y_train = dataset_manager.MultiLabel2Matrix(train, genre_types)
 print("Train Data Ready!")
@@ -31,15 +31,15 @@ print("Train Data Ready!")
 train = None
 
 classifier = LabelPowerset(
-    classifier=RandomForestClassifier(n_estimators=60, random_state=42, n_jobs=3),
+    classifier=RandomForestClassifier(n_estimators=250, random_state=42, n_jobs=3),
     require_dense=[False, True]
 )
 
 classifier.fit(x_train, y_train)
 print("Training Complete!")
 # Prepare test data
-x_test = input_envoy.Bow(test["Summary"], stop_words=None)
-x_test = input_envoy.Extend_features_bow(x_train, x_test)
+x_test = input_envoy.X_word2vec(test["Summary"])
+
 y_test = dataset_manager.MultiLabel2Matrix(test, genre_types)
 print(y_test)
 print("Test Data Ready!")
@@ -49,6 +49,8 @@ y_train = None
 
 
 prediction = classifier.predict(x_test)
+
+
 print("Test Complete!")
 print(prediction)
 print("hamming loss: ", metrics.hamming_loss(y_test, prediction))
