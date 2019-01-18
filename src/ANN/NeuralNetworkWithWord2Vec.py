@@ -35,7 +35,7 @@ def Word2Vec(model, data):
 # -- Get data --
 
 
-word2vecModel = gensim.models.KeyedVectors.load_word2vec_format('./2vecmodels/GoogleNews-vectors-negative300.bin', binary=True)
+word2vecModel = gensim.models.KeyedVectors.load_word2vec_format('../2vecmodels/GoogleNews-vectors-negative300.bin', binary=True)
 
 manager = DatasetManager()
 data = manager.ReadCleanedData()  # read data
@@ -56,7 +56,7 @@ testGenre = testData["Genre"]  # novel's genres for test
 num_labels = 27  # class number. We have 22 layer for classification
 vocab_size = 20000  # inputs number for neural network, It must be examine in feature for our data set
 batch_size = 20
-epoch_size = 500
+epoch_size = 1000
 
 tempTrain = Word2Vec(word2vecModel, trainSummary)
 x_train = np.array(tempTrain)
@@ -77,10 +77,10 @@ y_test = encoder.transform(testGenre)  # convert to  test output data to binary
 # -- Build Keras Model and Fit --
 # Now neural network model like that: [15000-256-256-15]
 model = Sequential()
-model.add(Dense(128, input_shape=(300,)))
+model.add(Dense(256, input_shape=(300,)))
 model.add(Activation('sigmoid'))
 model.add(Dropout(0.3))
-model.add(Dense(128))
+model.add(Dense(256))
 model.add(Dropout(0.3))
 model.add(Activation('sigmoid'))
 model.add(Dense(num_labels))
@@ -106,8 +106,6 @@ score = model.evaluate(x_test, y_test,
                        batch_size=batch_size, verbose=1)
 print('Test accuracy:', score[1])
 x = model.predict(x_test, batch_size)
-# x[x >= 0.1] = 1
-# x[x < 0.1] = 0
 mostFrequentGenres = {1: ' Alternate history', 2: ' Autobiography', 3: ' Biography', 4: " Children's literature", 5: ' Comedy',
                       6: ' Comic novel', 7: ' Crime Fiction', 8: ' Detective fiction', 9: ' Dystopia', 10: ' Fantasy',
                       11: ' Fiction', 12: ' Gothic fiction', 13: ' Historical fiction', 14: ' Historical novel', 15: ' Horror',
@@ -142,4 +140,4 @@ df_matrix = pd.DataFrame(confusion_matrix(test_genres, s_pred), index=[key for k
 plt.figure(figsize = (10,10))
 sn.heatmap(df_matrix, annot=True, fmt='g')
 plt.show()
-plt.savefig("naive_bayes.png")
+plt.savefig("ANN.png")

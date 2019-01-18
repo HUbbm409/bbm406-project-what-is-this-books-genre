@@ -94,12 +94,11 @@ y_test = ConvertGenreListToVector(trainData)
 # -- CREATE MODEL --
 model = BuildNeuralNetworkModel(3, 256, "relu", 300, "sigmoid", 0.5, 27)
 
-epochList = [1, 5, 10, 25, 50, 100, 150, 200, 250, 500, 1000]
-batchSizeList = [2, 4, 8, 16, 32, 64]
+epochList = [1, 5, 10, 25, 50, 100, 150, 200, 250,100, 500, 1000]
+
+batchSizeList = [2, 4, 8, 16,64]
 # -- TRAIN MODEL --
 
-# batchSize = 32
-# epochSize = 1
 directory = Path().absolute()
 for epoch in epochList:
     for batch in batchSizeList:
@@ -107,9 +106,5 @@ for epoch in epochList:
         modelName = "\\model" + str(epoch) + "Epoch" + str(batch) + "Batch" + ".h5"
         model.model.save(str(directory) +"\\Model" +modelName)
 print("DONE!!")
-
-directory = Path().absolute()
-print(directory)
 recorder = ObjectManager()
-recorder.RecordObject(testData,"D:\\Okul Dosyalar\\Ders\\BBM 406\\Project\\What-is-this-book-s-genre-\\RecordedObject\\TestData")
-model.model.save(str(directory)+'\\Model\\deneme.h5')
+recorder.RecordObject(testData,str(directory)+"\\RecordedObject\\TestData")

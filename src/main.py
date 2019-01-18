@@ -2,6 +2,7 @@ from data_management.dataset_manager import DatasetManager
 import matplotlib.pyplot as plt
 import ast
 import numpy as np
+from ANN import ANNTest
 
 genre_types = {' Fiction': 0, ' Speculative fiction': 0, ' Science Fiction': 0, ' Novel': 0, ' Fantasy': 0,
                  " Children's literature": 0, ' Mystery': 0, ' Young adult literature': 0, ' Suspense': 0,
